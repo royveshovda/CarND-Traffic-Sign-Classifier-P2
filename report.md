@@ -1,7 +1,7 @@
 # **Traffic Sign Recognition**
 
 ## Report
-###By Roy Veshovda
+### By Roy Veshovda
 ---
 
 **Build a Traffic Sign Recognition Project**
@@ -80,20 +80,20 @@ My final model consisted of the following layers:
 | Layer         		|     Description	        					|
 |:---------------------:|:---------------------------------------------:|
 | Input         		| 32x32x3 RGB image   							|
-| 1: Convolution 5x5     	| 1x1 stride, same padding, outputs 32x32x64 	|
+| 1: Convolution 5x5     	| 1x1 stride, valid padding, outputs 28x28x16 	|
 | 1: RELU					|												|
-| 1: Max pooling	      	| 2x2 stride,  outputs 16x16x64 				|
-| 2: Convolution 5x5	    | 1x1 stride, same padding, outputs 16x16x128 	|
+| 1: Max pooling	      	| 2x2 stride,  outputs 14x14x16	|
+| 2: Convolution 5x5	    | 1x1 stride, valid padding, outputs 10x10x48 	|
 | 2: RELU					|												|
-| 2: Max pooling	      	| 2x2 stride,  outputs 8x8x128 				|
+| 2: Max pooling	      	| 2x2 stride,  outputs 5x5x48 				|
 | 2: Flatten					|												|
-| 3: Fully connected		| Input: 8192, output: 4096 	|
+| 3: Fully connected		| Input: 1200, output: 400 	|
 | 3: RELU					|												|
 | 3: Dropout					|												|
-| 4: Fully connected		| Input: 4096, output: 1024 	|
+| 4: Fully connected		| Input: 400, output: 200 	|
 | 4: RELU					|												|
 | 4: Dropout					|												|
-| 5: Fully connected		| Input: 1024, output: 43 	|
+| 5: Fully connected		| Input: 200, output: 43 	|
 
 
 
@@ -112,8 +112,8 @@ For learning rate I tested a few options, but ended up using 0.001.
 The code for calculating the accuracy of the model is located in the 12th cell of the Jupyter notebook.
 
 My final model results were:
-* validation set accuracy of 97.9%
-* test set accuracy of 96.8%
+* validation set accuracy of 97.6%
+* test set accuracy of 96.1%
 
 My approach contained many iterations. Here are the most important listed:
 * At first I tried plain LeNet network without any normalization or regularization of any kind. That resulted in a poor performance of around 80% accuracy.
@@ -121,6 +121,7 @@ My approach contained many iterations. Here are the most important listed:
 * As a last step I introduced dropout, and set the dropout rate to 0.9. This did not give too much improvements either.
 * I extended the network to include more nodes at each level, and was able to increase the accuracy to about 95% validation accuracy, but only 91% testing accuracy.
 * I decided to increase the number of epochs to 600 and also set the dropout to 0.5
+* I tried in a couple of different ways to increase the number of nodes in the model, but neither more nodes in the convolutional layers, nor in the fully connected layers gave any better results. I reverted back to the delivered solution, which seems to be a good tradeoff between complexity and runtime.
 
 
 
@@ -143,12 +144,12 @@ Here are the results of the prediction:
 |:---------------------:|:---------------------------------------------:|
 | Traffic signals      		| Traffic signals 	|
 | Ahead only     			| Ahead only	|
-| Speed limit (70km/h)					| Yield											|
-| Road narrows on the right	      		| Bumpy Road					 				|
+| Speed limit (70km/h)					| Speed limit (20km/h) |
+| Road narrows on the right	| Road narrows on the right	|
 | Priority road			| Priority road	|
 
 
-The model was able to correctly guess 3 of the 5 traffic signs, which gives an accuracy of 60%. This is not too bad considering I have not trained the model with any kind of skewed images.
+The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This is not too bad considering I have not trained the model with any kind of skewed images. My intuition of the difficult images was also confirmed, as image 3 turned out to be wrong. But for image 3 it was still classified as a speed limit sign. With only the digit 2 instead of 7.
 
 #### 3. How certain the model?
 
@@ -159,52 +160,62 @@ The top five soft max probabilities were
 
 | Probability         	|     Prediction	        					|
 |:---------------------:|:---------------------------------------------:|
-| .60         			| Stop sign   									|
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+| .99         			| Traffic signals  |
+| .000033   				| Beware of ice/snow  |
+| .00000071					| Priority road  |
+| .000000689   			| Keep right  |
+| .000000088		    | Right-of-way at the next intersection  |
 
 ##### Image 2
 The top five soft max probabilities were
 
 | Probability         	|     Prediction	        					|
 |:---------------------:|:---------------------------------------------:|
-| .60         			| Stop sign   									|
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+| 1.0         			| Ahead only  |
+| 5.92588723e-24		| Turn left ahead  |
+| 7.52890552e-29    | Go straight or right  |
+| 8.07868461e-31    | Turn right ahead  |
+| 1.60519613e-33    | Speed limit (60km/h)  |
 
 ##### Image 3
 The top five soft max probabilities were
 
 | Probability         	|     Prediction	        					|
 |:---------------------:|:---------------------------------------------:|
-| .60         			| Stop sign   									|
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+| .47062558   	| Speed limit (20km/h)	|
+| .09889314			| End of all speed and passing limits	|
+| .09530148     | Right-of-way at the next intersection  |
+| .07172929     | Roundabout mandatory  |
+| .07053854     | Bicycles crossing  |
 
 ##### Image 4
 The top five soft max probabilities were
 
+IMAGE4
+
+
+
+
 | Probability         	|     Prediction	        					|
 |:---------------------:|:---------------------------------------------:|
-| .60         			| Stop sign   									|
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+| .48397925   | Road narrows on the right  |
+| .43195409 	| General caution  |
+| .04340653 	| Traffic signals  |
+| .00889096   | Road work  |
+| .00502721   | Dangerous curve to the right  |
 
 ##### Image 5
-The top five soft max probabilities were
+For image 5 the network were extremely confident. Did not even consider other options.
+The last 4 options are simply the first 4 in the output.
+
+The top five soft max probabilities were:
+
+
 
 | Probability         	|     Prediction	        					|
 |:---------------------:|:---------------------------------------------:|
-| .60         			| Stop sign   									|
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+| 1.0   | Priority road  |
+| .0    | Speed limit (20km/h)  |
+| .0		| Speed limit (30km/h)  |
+| .0	  | Speed limit (50km/h)  |
+| .0		| Speed limit (60km/h)  |
