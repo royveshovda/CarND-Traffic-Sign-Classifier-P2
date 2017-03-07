@@ -63,9 +63,11 @@ The code for this step is contained in the 5th code cell of the Jupyter notebook
 
 My intuition was to keep the color channels, as I believe the signs will be easier to separate if colors are also processed by the network.
 
-But I wanted to normalize the color channels between -1.0 and 1.0 (instead of the original 0-255).
+But I wanted to normalize the color channels between -1.0 and 1.0 (instead of the original 0-255). Normalized values (in combination with non-zero initialized weights) are important for the backpropagation algorithm to operate optimal.
 
 I also am running a shuffle of the training data.
+
+The labels are one-hot-coded, meaning they are represented as a bit-string with one bit representing each class. For examle the class number 22, is translated to a bit-string with a 1 in position 22, and zeros before and after. This is also to let network be easier to train.
 
 #### 2. Training, validation and testing data.
 
@@ -104,7 +106,14 @@ The code for training the model is located in the 7th and 9th cell of the Jupyte
 I decided to train the model using the optimizer suggested in the LeNet example: AdamOptimizer.
 In the end I used 600 epochs and batch size of 1024.
 
-For learning rate I tested a few options, but ended up using 0.001.
+The batch size was from how much memory the computer I was running on had available.
+
+For the epochs number you need the network not to overfit or underfit. If the accuracy is still improving when you stop, it means you have probably underfit your network. Similarly if the network has stopped at a certain accuracy for a very long time, it probably means your network is overtrained, and has overfitted it's weight, and will most likely perform poorly on values it has not seen before. We need to strike a balance between underfit (still more to learn), and overfit (not general enough). Ideally this should be detected automatically and terminate the training when the accuracy has stabilized.
+
+I wen for a manual approach, and tuned the epochs number manually and adjusting to a number that I found acceptable for the used learning rate.
+
+
+For learning rate I tested a few options, but ended up using 0.001. You want a network that converges toward a solution fairly fast, but not too fast. Based on my thin experience, I decided I liked the converge rate of 0.001 better than higher or lower values.
 
 
 #### Approach taken for finding a solution
